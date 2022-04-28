@@ -67,7 +67,6 @@ const createWindow = async () => {
 
     const win = await createWindow();
     win.setIgnoreMouseEvents(true);
-    win.openDevTools({mode: 'undocked'});
 
     const sendKey = (key) => win.webContents.send('key', key);
 
