@@ -66,6 +66,7 @@ const createWindow = async () => {
     await app.whenReady();
 
     const win = await createWindow();
+    win.setAlwaysOnTop(true, "pop-up-menu");
     win.setIgnoreMouseEvents(true);
 
     const sendKey = (key) => win.webContents.send('key', key);
