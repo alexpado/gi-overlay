@@ -25,19 +25,14 @@ const createWindow = async () => {
               height,
           }              = primaryDisplay.workAreaSize;
 
-    const size = {
-        width:  292,
-        height: 120,
-    };
-
     const position = {
-        x: Math.round((width - size.width) / 2),
-        y: 20,
+        x: 0,
+        y: 0,
     };
 
     const win = new BrowserWindow({
-        width:          size.width,
-        height:         size.height,
+        width:          width,
+        height:         height,
         x:              position.x,
         y:              position.y,
         frame:          false,
@@ -46,8 +41,8 @@ const createWindow = async () => {
         minimizable:    false,
         skipTaskbar:    true,
         focusable:      false,
-        fullscreen:     false,
-        fullscreenable: false,
+        fullscreen:     true,
+        fullscreenable: true,
         center:         false,
         transparent:    true,
         webPreferences: {
@@ -68,6 +63,7 @@ const createWindow = async () => {
     const win = await createWindow();
     win.setAlwaysOnTop(true, "pop-up-menu");
     win.setIgnoreMouseEvents(true);
+    win.webContents.openDevTools({mode: "detach"});
 
     const sendKey = (key) => win.webContents.send('key', key);
 

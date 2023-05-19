@@ -1,6 +1,7 @@
-import Storage                  from './Storage.js';
-import CurrentTalentLevelScreen from './screens/CurrentTalentLevelScreen.js';
-import BookStore                from './BookStore.js';
+import {Characters}      from './game/Character.js';
+import {TalentMaterials} from './game/TalentMaterial.js';
+import Storage           from './Storage.js';
+import {Talents}         from './game/Talent.js';
 
 class Application {
 
@@ -10,35 +11,7 @@ class Application {
     constructor(mountPoint) {
 
         this.mountPoint = mountPoint;
-        this.storage    = new Storage();
-        /**
-         * @type {Screen}
-         */
-        this.screen = new CurrentTalentLevelScreen(this);
-        this.bookStore = new BookStore(this);
-
         this.render();
-    }
-
-    /**
-     * @returns {Storage}
-     */
-    getStorage() {
-        return this.storage;
-    }
-
-    /**
-     * @returns {BookStore}
-     */
-    getBookStore() {
-        return this.bookStore;
-    }
-
-    /**
-     * @returns {Screen}
-     */
-    getScreen() {
-        return this.screen;
     }
 
     /**
@@ -51,7 +24,7 @@ class Application {
 
     render() {
         this.mountPoint.innerHTML = '';
-        this.mountPoint.appendChild(this.screen.getComponent());
+        //this.mountPoint.appendChild(this.screen.getComponent());
     }
 
 }
@@ -95,8 +68,8 @@ const Actions = {
      * @constructor
      */
     Delete: (el) => {
-        el.getStorage().erase();
-        el.setScreen(new CurrentTalentLevelScreen(el));
+        Storage.reset();
+        el.setScreen(null);
     },
 };
 
@@ -108,6 +81,10 @@ window.context.onKeyReceived(key => {
             app.getScreen().refresh();
         }
     }
-})
+});
 
 window.application = app;
+
+window.characters = Characters;
+window.materials  = TalentMaterials;
+window.talents    = Talents;

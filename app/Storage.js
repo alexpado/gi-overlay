@@ -1,74 +1,116 @@
-export default class Storage {
+class Storage {
+    constructor() {
 
-    erase() {
-        this.setCurrentTalentLevel('Attack', 1);
-        this.setCurrentTalentLevel('Skill', 1);
-        this.setCurrentTalentLevel('Burst', 1);
-        this.setTargetTalentLevel('Attack', 1);
-        this.setTargetTalentLevel('Skill', 1);
-        this.setTargetTalentLevel('Burst', 1);
-        this.setBookAmount('bronze', 0);
-        this.setBookAmount('silver', 0);
-        this.setBookAmount('gold', 0);
-    }
-
-    read(key, def) {
-        return localStorage.getItem(key.toLowerCase()) ?? def;
-    }
-
-    write(key, value) {
-        localStorage.setItem(key.toLowerCase(), value);
+        this.read();
     }
 
     /**
-     * @param {'Attack'|'Skill'|'Burst'} talent
-     * @param {number} value
+     * Read the data from the localStorage content
      */
-    setCurrentTalentLevel(talent, value) {
-        this.write(`talent.${talent}.current`, `${value}`);
+    read() {
+        this.memory = JSON.parse(localStorage.getItem('memory') ?? '{}');
     }
 
     /**
-     * @param {'Attack'|'Skill'|'Burst'} talent
-     * @param {number} value
+     * Submit this storage data to the localStorage.
      */
-    setTargetTalentLevel(talent, value) {
-        this.write(`talent.${talent}.target`, `${value}`);
+    write() {
+        localStorage.setItem('memory', JSON.stringify(this.memory));
     }
 
     /**
-     * @param {'bronze'|'silver'|'gold'} bookType
-     * @param {number} value
+     * Remove all saved data and submit it to the localStorage.
      */
-    setBookAmount(bookType, value) {
-        this.write(`book.${bookType}`, `${value}`);
+    reset() {
+        this.memory = {};
+        this.write();
     }
 
     /**
-     * @param {'Attack'|'Skill'|'Burst'} talent
-     * @param {number} def
-     * @returns {number}
+     * Define the raw value for the provided key.
+     * @param {string} key
+     * @param {*} value
      */
-    getCurrentTalentLevel(talent, def) {
-        return parseInt(this.read(`talent.${talent}.current`, def));
+    setRaw(key, value) {
+        _.set(this.memory, key, value);
+        this.write();
     }
 
     /**
-     * @param {'Attack'|'Skill'|'Burst'} talent
-     * @param {number} def
-     * @returns {number}
+     * Retrieve the raw value for the provided key.
+     * @param {string} key
+     * @param {*} defaultValue
+     * @return {*}
      */
-    getTargetTalentLevel(talent, def) {
-        return parseInt(this.read(`talent.${talent}.target`, def));
+    getRaw(key, defaultValue) {
+        return _.get(this.memory, key, defaultValue);
     }
 
     /**
-     * @param {'bronze'|'silver'|'gold'} bookType
-     * @param {number} def
-     * @returns {number}
+     * Retrieve the current level of the requested talent for the given character.
+     *
+     * @param {Character} character
+     * @param {Talent} talent
+     * @return {number}
      */
-    getBookAmount(bookType, def) {
-        return parseInt(this.read(`book.${bookType}`, def));
+    getCharacterTalentCurrentLevel(character, talent) {
+
+        return this.getRaw(`talent.${character.id}.current.${talent.id}`, 1);
     }
 
+    /**
+     * Retrieve the target level of the requested talent for the given character.
+     *
+     * @param {Character} character
+     * @param {Talent} talent
+     * @return {number}
+     */
+    getCharacterTalentTargetLevel(character, talent) {
+
+        return this.getRaw(`talent.${character.id}.target.${talent.id}`, 1);
+    }
+
+    /**
+     * Define the current level of the requested talent for the given character.
+     *
+     * @param {Character} character
+     * @param {Talent} talent
+     * @param {number} level
+     */
+    setCharacterTalentCurrentLevel(character, talent, level) {
+
+        this.setRaw(`talent.${character.id}.current.${talent.id}`, level);
+    }
+
+    /**
+     * Retrieve the target level of the requested talent for the given character.
+     *
+     * @param {Character} character
+     * @param {Talent} talent
+     * @param {number} level
+     */
+    setCharacterTalentTargetLevel(character, talent, level) {
+
+        this.setRaw(`talent.${character.id}.target.${talent.id}`, level);
+    }
+
+    /**
+     * @param {TalentMaterial} material
+     * @param {"teachings"|"guide"|"philosophies"} type
+     * @param {number} amount
+     */
+    setTalentMaterialAmount(material, type, amount) {
+        this.setRaw(`inventory.talents.${material.id}.${type}`, amount);
+    }
+
+    /**
+     * @param {TalentMaterial} material
+     * @param {"teachings"|"guide"|"philosophies"} type
+     */
+    getTalentMaterialAmount(material, type) {
+
+        return this.getRaw(`inventory.talents.${material.id}.${type}`, 0);
+    }
 }
+
+export default new Storage();
