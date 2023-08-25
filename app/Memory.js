@@ -1,21 +1,61 @@
-class Storage {
-    constructor() {
+export default class Memory {
 
+    /**
+     * @param {string} dataSource
+     */
+    constructor(dataSource) {
+
+        this.dataSource = dataSource;
         this.read();
+    }
+
+    /**
+     * @param {any} source
+     * @param {string[]} path
+     * @param {any=} defaultValue
+     * @private
+     */
+    readMemory(source, path, defaultValue) {
+        if (path.length === 1) {
+            return source[path[0]] ?? defaultValue;
+        } else {
+            if (!!!source[path[0]]) {
+                source[path[0]] = {};
+            }
+            return this.readMemory(source[path[0]], path.slice(1), defaultValue);
+        }
+    }
+
+    /**
+     * @param source
+     * @param path
+     * @param value
+     * @private
+     */
+    writeMemory(source, path, value) {
+        if (path.length === 1) {
+            source[path[0]] = value;
+            this.write();
+        } else {
+            if (!!!source[path[0]]) {
+                source[path[0]] = {};
+            }
+            this.writeMemory(source[path[0]], path.slice(1), value);
+        }
     }
 
     /**
      * Read the data from the localStorage content
      */
     read() {
-        this.memory = JSON.parse(localStorage.getItem('memory') ?? '{}');
+        this.memory = JSON.parse(localStorage.getItem(this.dataSource) ?? '{}');
     }
 
     /**
      * Submit this storage data to the localStorage.
      */
     write() {
-        localStorage.setItem('memory', JSON.stringify(this.memory));
+        localStorage.setItem(this.dataSource, JSON.stringify(this.memory));
     }
 
     /**
@@ -32,7 +72,9 @@ class Storage {
      * @param {*} value
      */
     setRaw(key, value) {
-        _.set(this.memory, key, value);
+
+        const path = key.split('.');
+        this.writeMemory(this.memory, path, value);
         this.write();
     }
 
@@ -43,14 +85,15 @@ class Storage {
      * @return {*}
      */
     getRaw(key, defaultValue) {
-        return _.get(this.memory, key, defaultValue);
+        const path = key.split('.');
+        return this.readMemory(this.memory, path, defaultValue);
     }
 
     /**
      * Retrieve the current level of the requested talent for the given character.
      *
-     * @param {Character} character
-     * @param {Talent} talent
+     * @param {GenshinCharacter} character
+     * @param {GenshinTalent} talent
      * @return {number}
      */
     getCharacterTalentCurrentLevel(character, talent) {
@@ -61,8 +104,8 @@ class Storage {
     /**
      * Retrieve the target level of the requested talent for the given character.
      *
-     * @param {Character} character
-     * @param {Talent} talent
+     * @param {GenshinCharacter} character
+     * @param {GenshinTalent} talent
      * @return {number}
      */
     getCharacterTalentTargetLevel(character, talent) {
@@ -73,8 +116,8 @@ class Storage {
     /**
      * Define the current level of the requested talent for the given character.
      *
-     * @param {Character} character
-     * @param {Talent} talent
+     * @param {GenshinCharacter} character
+     * @param {GenshinTalent} talent
      * @param {number} level
      */
     setCharacterTalentCurrentLevel(character, talent, level) {
@@ -85,8 +128,8 @@ class Storage {
     /**
      * Retrieve the target level of the requested talent for the given character.
      *
-     * @param {Character} character
-     * @param {Talent} talent
+     * @param {GenshinCharacter} character
+     * @param {GenshinTalent} talent
      * @param {number} level
      */
     setCharacterTalentTargetLevel(character, talent, level) {
@@ -95,7 +138,7 @@ class Storage {
     }
 
     /**
-     * @param {TalentMaterial} material
+     * @param {GenshinItem} material
      * @param {"teachings"|"guide"|"philosophies"} type
      * @param {number} amount
      */
@@ -104,7 +147,7 @@ class Storage {
     }
 
     /**
-     * @param {TalentMaterial} material
+     * @param {GenshinItem} material
      * @param {"teachings"|"guide"|"philosophies"} type
      */
     getTalentMaterialAmount(material, type) {
@@ -112,5 +155,3 @@ class Storage {
         return this.getRaw(`inventory.talents.${material.id}.${type}`, 0);
     }
 }
-
-export default new Storage();

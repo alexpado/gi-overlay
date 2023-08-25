@@ -15,31 +15,39 @@ Even if the name state that this is an overlay:
 - ✅ It uses keyboard shortcuts only
 
 So, by using this, you should be pretty safe, but I can't be responsible for any ban that would occur by using this.
-Again, ***this still count as 3rd party software***.
+Again, ***this still count as 3rd party software*** (but *bad* Hoyoverse if you ban for this).
 
 > I might add ***optional*** support for reading the screen content later. It would allow to automatically detect needed
 > materials and also automatically detect your loot when in a domain. But as I don't have any freaking idea on how to do
-> it, I'll put that on hold for the moment.
+> it, I'll put that on hold for the moment _(if you want to contribute on that, you are more than welcome!)_.
 
 # Purpose
 
-The sole purpose of this program is to help you keep track of your farming progress without ever using alt+tab. For now,
-it only supports talent books, but I plan adding weapon materials and character materials.
+The sole purpose of this program is to help you keep track of your farming progress without ever using alt+tab. F~~or
+now,
+it only supports talent books, but I plan adding weapon materials and character materials.~~ It supports every book and
+multiple characters at the same time for your comfort now!
 
-When you set a book amount above what is required for you to level up your character talent(s), it will automatically
-convert book to higher level.
+When you have more talent materials than needed for a rarity, the excess will be used to simulate crafting the rarity
+above. This allows you to better plan your farming session rather than going blindly and craft from time to time to
+follow your progress.
 
-In other words: You only need 3 bronze books, you have 6 bronze books: It will show a green `+1` on the silver books to
-tell you that `1` silver book comes from crafting the `3` extra bronze books. The same applies for gold books.
+You can also use the `Upgrade` button on a character talent to automatically consume available materials and add one
+level. If the upgrade is only possible after crafting, the application won't let you upgrade: You'll need to craft and
+update your inventory accordingly. This is done like this because some characters give you bonus while crafting, which
+can't be handled by the application automatically for obvious reasons.
 
 # How to use
 
+> This is for the application before the UI rewrite. The new UI isn't finished yet (missing the overlay)
+
 Using the program is pretty straightforward. You only have three "screens":
 
-- **Current Talent Level:** This is the screen where you will configure the talent level of the character of your
+- **Current GenshinTalent Level:** This is the screen where you will configure the talent level of the character of your
   choice. Please note that constellations can modify the effective level of your talents: If the number is blue, please
   remove 3 levels (and only 1 for normal attack if you have Tartaglia passive applied).
-- **Target Talent Level:** This is the screen where you will tell to which level you want to upgrade your character's
+- **Target GenshinTalent Level:** This is the screen where you will tell to which level you want to upgrade your
+  character's
   talents. This screen is very similar to the previous one, only the small title on the bottom changes, watch out !
 - **Book Screen:** *Yes, this one doesn't have a real title*. This is the screen where you'll see how many books you
   need of each type to upgrade your character's talents. You can set the amount book you already have here, and

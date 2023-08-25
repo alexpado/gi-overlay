@@ -5,6 +5,7 @@ const {
           ipcMain,
       }    = require('electron');
 const path = require('path');
+const {OverlayController} = require("electron-overlay-window");
 
 require('electron-reload')(__dirname);
 
@@ -25,24 +26,17 @@ const createWindow = async () => {
               height,
           }              = primaryDisplay.workAreaSize;
 
-    const position = {
-        x: 0,
-        y: 0,
-    };
-
     const win = new BrowserWindow({
-        width:          width,
-        height:         height,
-        x:              position.x,
-        y:              position.y,
+        width:          1280,
+        height:         720,
         frame:          false,
-        alwaysOnTop:    true,
+        alwaysOnTop:    false,
         resizable:      false,
         minimizable:    false,
-        skipTaskbar:    true,
-        focusable:      false,
-        fullscreen:     true,
-        fullscreenable: true,
+        skipTaskbar:    false,
+        focusable:      true,
+        fullscreen:     false,
+        fullscreenable: false,
         center:         false,
         transparent:    true,
         webPreferences: {
@@ -53,7 +47,7 @@ const createWindow = async () => {
         },
     });
 
-    await win.loadFile('index.html');
+    await win.loadFile('web.html');
     return win;
 };
 
@@ -61,8 +55,8 @@ const createWindow = async () => {
     await app.whenReady();
 
     const win = await createWindow();
-    win.setAlwaysOnTop(true, "pop-up-menu");
-    win.setIgnoreMouseEvents(true);
+    //win.setAlwaysOnTop(true, "pop-up-menu");
+    //win.setIgnoreMouseEvents(true);
     win.webContents.openDevTools({mode: "detach"});
 
     const sendKey = (key) => win.webContents.send('key', key);
